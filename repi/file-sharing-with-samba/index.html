@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en_US">
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+  	<meta name="description" content="">
+  	<meta name="author"      content="map[]">
+    
+    	<title>File sharing with Samba</title>
+	<link rel="shortcut icon" href="https://bcmryan.comimages/favicon.icon">
+
+	
+	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	
+	
+	<script defer src="https://use.fontawesome.com/releases/v5.0.11/js/all.js" integrity="sha384-ImVoB8Er8knetgQakxuBS4G3RSkyD8IZVVQCAnmRJrDwqJFYUE4YOv+DbIofcO9C" crossorigin="anonymous"></script>
+	
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	
+	
+  
+  <link rel="stylesheet" href="https://bcmryan.com/css/styles.min.64a6643395c6bf1ec6fff31d6429046b3ad467e58a279ff252dc019edd80a87051cf90b7fe2d589277def72d84602dcbc7115e2e17a94db3a8838336986a0ae3.css" integrity="sha512-ZKZkM5XGvx7G//MdZCkEazrUZ&#43;WKJ5/yUtwBnt2AqHBRz5C3/i1Yknfe9y2EYC3LxxFeLhepTbOog4M2mGoK4w==">
+
+   
+  
+
+  </head>
+  
+  <body class="home">
+
+    
+      <header id="header">
+  <div id="head" class="parallax" data-parallax-speed="2" style="background-image:url('https://bcmryan.com');">
+    <h1 id="logo" class="text-center">
+      <img class='img-circle' src="https://bcmryan.comimages/brendanryan.jpg" alt="">
+      <span class="title">Brendan Ryan</span>
+      <span class="tagline">At the intersection of technology and liberal arts<br>
+        <a href="mailto:"></a>
+      </span>
+   </h1>
+</div>
+
+<nav class="navbar navbar-default navbar-sticky">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav">
+            
+                
+                <li>
+                    <a href="/">home</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/bio/">bio</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/repi/">RePi</a>
+                </li>
+                
+            
+            </ul>
+
+        </div> 
+        
+    </div>
+</nav>
+
+</header>
+    
+ 
+    
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			<div class="col-sm-8 col-sm-offset-2">
+
+ 				<article class="post">
+					<header class="entry-header">
+ 						<div class="entry-meta">
+
+ 						</div>
+ 						<h1 class="entry-title"><a href="https://bcmryan.com/repi/file-sharing-with-samba/" rel="bookmark">File sharing with Samba</a></h1>
+					</header>
+					<div class="entry-content">
+						<p>With a central directory merging all of your large storage drives together, it is time to make them accessible over your local network with <a href="https://en.wikipedia.org/wiki/Samba_(software)">Samba</a>, a reimplementation of the <a href="https://en.wikipedia.org/wiki/Server_Message_Block">Server Message Block SMB protocol</a>.
+Although SMB usually is targeted at use with Windows computers, as it allows for networking between Windows, Linux and macOS (all of which are represented in my house), it is what I use on my local network.
+(A commonly used alternative in the Linux world is <a href="https://en.wikipedia.org/wiki/Network_File_System">Network File System, NFS</a>.)</p>
+<p>Before you can begin to share the contents of your file system across your local network, you must first install <code>samba</code> via <code>apt</code>.
+I have included lines above to automatically answer the question &ldquo;Modify smb.conf to use WINS settings from DHCP?&rdquo; to &ldquo;No&rdquo; by use of <a href="http://manpages.ubuntu.com/manpages/bionic/man1/debconf-set-selections.1.html"><code>debconf-set-selections</code></a> (see <a href="https://unix.stackexchange.com/questions/546470/skip-prompt-when-installing-samba)">https://unix.stackexchange.com/questions/546470/skip-prompt-when-installing-samba)</a>.</p>
+<pre><code>pi@repi:~$ echo &quot;samba-common samba-common/workgroup string WORKGROUP&quot; | sudo debconf-set-selections
+pi@repi:~$ echo &quot;samba-common samba-common/do_debconf boolean true&quot; | sudo debconf-set-selections
+pi@repi:~$ echo &quot;samba-common samba-common/dhcp boolean false&quot; | sudo debconf-set-selections
+pi@repi:~$ sudo apt install --yes samba
+</code></pre><p>As there are a number of depdencies to install, this may take a minute.
+The next step is to save a copy of the original Samba config file at <code>/etc/samba/smb.conf</code>.
+As this file acts more like documentation than configuration, it is best to keep a copy of it were you to ever need to look at it again.
+To do so, use the <code>mv</code> (move; also for renaming files) command with elevated privileges to rename the file as <code>/etc/samba/smb.conf.bak</code> (<code>.bak</code> is a commonly used file extension for backups; and there is no need to worry that this file is now not able to be accessed, Linux still knows that this is a text file, unlike a Windows machine, for instance).</p>
+<p>To write a new <code>/etc/samba/smb.conf</code>, we will again use <code>tee</code>.
+The exact parameters are defined in the <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html">official documentation</a>, so I will only summarize them here.
+For global (thus for all Samba shares, even though only <code>[storage]</code> is defined here) the <code>map to guest = Bad User</code> option means that users, whether they have a valid username or not, can be given guest access.
+Logs are kept in the directory <code>/var/log/samba/</code>, although <code>log level = 1</code> means that extensive logging needed for debugging is not provided.
+The share defined here is called <code>[storage]</code> and allows access to files at <code>path = /mnt/storage</code>.
+The option <code>guest ok = yes</code> means that anyone can access the share (even those without an account), but <code>read only = yes</code> means that general users are given read-only access.
+Read-write access, on the other hand, is given to user storagerw through the option <code>write list = storagerw</code>.
+To avoid permissions issues, the options <code>force user = storagerw</code> and <code>force group = storage</code> are set so to the same user and group that owns <code>/mnt/storage</code>; note, however, that this still requires a user to be on the <code>write list</code>, or else they are given read-only access.
+Comments can be used throughout with the use of a hash.</p>
+<pre><code>pi@repi:~$ sudo tee -a /etc/samba/smb.conf &lt;&lt; END
+[global]
+        map to guest = Bad User
+        log file = /var/log/samba/%m.log
+        log level = 1
+
+[storage]
+        # Public read access and read-write access for storagerw.
+        path = /mnt/storage
+        guest ok = yes
+        read only = yes
+        write list = storagerw
+        force user = storagerw
+        force group = storage
+END
+</code></pre><p>As storagerw is now a defined user for the Samba share, you need to define this user&rsquo;s password.
+To do this, use the <a href="https://www.samba.org/samba/docs/current/man-html/smbpasswd.8.html"><code>smbpasswd</code></a> command with option <code>-a</code> to specify that this is a new password.
+When prompted for a password (and when prompted to repeat it), for this tutorial, I am using <code>passwordsamba</code>.
+But this is an absolutely terrible password, and you should use your own.</p>
+<p><code>pi@repi:~$ sudo smbpasswd -a storagerw</code></p>
+<p>Now, for the next step, you should switch to your Linux desktop.
+(Here are steps for <a href="https://www.techrepublic.com/article/how-to-connect-to-linux-samba-shares-from-windows-10/">Windows 10</a> using <code>//192.168.0.100/storage</code> and <a href="https://www.techrepublic.com/article/how-to-connect-your-macos-device-to-an-smb-share/">macOS</a> using <code>smb://192.168.0.100/storage</code>.
+Again, I would appreciate links to official documentation if they exist.)
+Here you will define your local user as the Samba user storagerw so that your desktop has read-write permissions to the Samba share.
+Thus your desktop will be the only one able to create, modify or delete directories or folders on the Raspberry Pi&rsquo;s share at <code>/mnt/storage</code>, but all other users on all other computers will be able to access it.
+This may be useful depending on how your Samba share is to be used.
+I, for instance, may want anyone on the network to be able to access all of the files in a specific share (of, say, family pictures), but to protect against data loss, I may only want a single user on a single computer to be able to create, modify or delete those pictures.
+That way, if a family member comes over to visit, they can view the photos using their device, but we can be sure that no one will accidently delete them.
+Following <a href="https://wiki.ubuntu.com/MountWindowsSharesPermanently">Ubuntu&rsquo;s documentation</a>, the first step is to install <code>cifs-utils</code> via <code>apt</code>.
+(<a href="https://en.wikipedia.org/wiki/Server_Message_Block#SMB_/_CIFS_/_SMB1">The name CIFS actually refers to SMB 1</a> from 1983 &ndash; Windows 10 introduced SMB 3.1.1 &ndash; but it seems to have stuck around.)</p>
+<p><code>bcmryan@desktop:~$ sudo apt install --yes cifs-utils</code></p>
+<p>From here, you need to create a mount point (directory) for the share using <code>mkdir</code> with elevated privileges.
+I will be using <code>/mnt</code>, as this standard directory for moint points that do not change (unlike <code>/media</code> which is for removable devices like USB drives).</p>
+<p><code>bcmryan@desktop:~$ sudo mkdir /mnt/repi</code></p>
+<p>As this directory was created with <code>sudo</code> privileges, you will now need to change the owner to your local user account with <code>chown</code>.</p>
+<p><code>bcmryan@desktop:~$ sudo chown --recursive bcmryan:bcmryan /mnt/repi</code></p>
+<p>Next, you need to edit your desktop&rsquo;s <code>/etc/fstab</code> to add your information about the mount.
+Copy the following text (making sure to edit your username).
+The first three space-separated columns define the Samba share location and mount point on your desktop.
+The third column defines <code>cifs</code> as the protocol used, and the fourth column defines the options (<a href="https://www.elektronik-kompendium.de/sites/raspberry-pi/2102201.htm">which are more clearly defined in a German-language tutorial</a>): the options <code>noauto,nofail,x-systemd.automount,x-systemd.requires=network-online.target</code> help the system overcome problems with booting if the share is not available on the network at bootup; UID and GID are defined to avoid permissions issues, thus allowing the user to use the share as if it were a local disk; a save location for <code>credentials</code> allows the user to store their password in their <code>/home</code> directory so that not every system user can access is; and clearly defining the character set as <code>iocharset=utf8</code> helps to avoid issues with filenames in with non-<a href="https://en.wikipedia.org/wiki/ASCII">ASCII</a> characters.</p>
+<pre><code>bcmryan@desktop:~$ sudo tee -a /etc/fstab &lt;&lt; END
+//192.168.0.100/storage /mnt/repi cifs noauto,nofail,x-systemd.automount,x-systemd.requires=network-online.target,uid=1000,gid=1000,credentials=/home/bcmryan/.smbcredentials,iocharset=utf8 0 0
+END
+</code></pre><p>Now it is time to create <code>.smbcredentials</code> in your <code>/home</code> directory as defined in the entry in <code>/etc/fstab</code>.
+For this, you input the username and password for the Samba share as defined earlier on the Raspberry Pi server.
+(Again make sure to use your local username.)</p>
+<pre><code>bcmryan@desktop:~$ tee -a /home/bcmryan/.smbcredentials &lt;&lt; END
+username=storagerw
+password=passwordsamba
+END
+</code></pre><p>As storing a password in a plain-text file may allow others access to it using default permissions, use the <a href="https://en.wikipedia.org/wiki/Chmod"><code>chmod</code></a> (change mode) command to give read-write permissions (6) to the file&rsquo;s owner only and no one in their group (0) or not in their group (0).</p>
+<p><code>bcmryan@desktop:~$ sudo chmod 600 ./.smbcredentials</code></p>
+<p>You can verify this by listing all directories and files in your <code>/home</code> directory and confirming that <code>.smbcredentials</code> is preceded by <code>-rw-------</code> (read-write permissions only for the owner).</p>
+<p><code>bcmryan@desktop:~$ ls -lah</code></p>
+<p>Back on the Raspberry Pi, it is now time to restart <a href="https://www.samba.org/samba/docs/current/man-html/smbd.8.html"><code>smbd</code></a> (Samba daemon) with <a href="https://manpages.ubuntu.com/manpages/focal/man1/systemctl.1.html"><code>systemctl</code></a> so that the newly configured changes will enacted.
+When asked for your password, you will need to enter the password of user pi, which is <code>passwordpi</code>.</p>
+<p><code>pi@repi:~$ systemctl restart smbd</code></p>
+<p>Now that the changes have been made on the Raspberry Pi, go back to your desktop and remount everything defined in <code>/etc/fstab</code> by completly restarting your machine with <code>reboot</code>.
+(Note that <code>sudo mount --all</code> did not allow me to access the Samba share at <code>/mnt/repi</code>, so using the <code>reboot</code> command was required.)</p>
+<p><code>bcmryan@desktop:~$ reboot</code></p>
+<p>On you log back into your desktop, you are able to access all files on <code>/mnt/repi</code> as if you were on the Raspberry Pi server at <code>/mnt/storage</code>.
+You can test this by listing all directories and files available at that mount point.</p>
+<p><code>bcmryan@desktop:~$ ls -lah /mnt/repi</code></p>
+
+					</div>
+				</article>
+
+			</div>
+		</div> 
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="share">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="comments">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+	</div>	
+
+</main>
+
+    
+    
+      <footer id="footer">
+	<div class="container">
+		<div class="row">
+			
+
+			
+			<div class="col-md-3 widget">
+				<h3 class="widget-title">Contact me</h3>
+				<div class="widget-body">
+					<p class="follow-me-icons">
+            
+							
+								<a href="https://twitter.com/bcmryan" target="_blank"><i class="fab fa-twitter-square fa-1x"></i></a>
+							
+            
+							
+								<a href="https://www.linkedin.com/in/bcmryan" target="_blank"><i class="fab fa-linkedin fa-1x"></i></a>
+							
+            
+							
+								<a href="https://github.com/bcmryan" target="_blank"><i class="fab fa-github fa-1x"></i></a>
+							
+            
+							
+								<a href="mailto:bcm.ryan@gmail.com" target="_blank"><i class="fas fa-envelope-square fa-1x"></i></a>
+							
+            
+					</p>
+				</div>
+			</div>
+			
+
+			
+
+			
+
+		</div> 
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p></p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						
+						Copyright &copy; Brendan Ryan<br>
+						Designed as <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> - 
+						Powered by <a href="https://gohugo.io/" rel="poweredby">Hugo</a> - 
+						Hosted at <a href="https://gohugo.io/" rel="poweredby">GitHub</a>
+					</p>
+				</div>
+			</div>
+
+		</div> 
+	</div>
+</footer>
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+
+
+<script src="https://bcmryan.com/js/bundle.min.f4a965ad0a8118e32f8f0f158ff3aadbacf700934c22286a1a5b245105e9006da73a873b001a160db22498909c1df14d1f835dba5ad76f80b32b0234182b2a58.js" integrity="sha512-9KllrQqBGOMvjw8Vj/Oq26z3AJNMIihqGlskUQXpAG2nOoc7ABoWDbIkmJCcHfFNH4NdulrXb4CzKwI0GCsqWA=="></script>
+
+</body>
+</html>
+
+    
+
+
+      
+
+  </body>
+  
+</html>

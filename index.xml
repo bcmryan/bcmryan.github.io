@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Brendan Ryan</title>
+    <link>https://bcmryan.com/</link>
+    <description>Recent content on Brendan Ryan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en_US</language>
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://bcmryan.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Practical Experience</title>
+      <link>https://bcmryan.com/bio/practical-experience/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
+      
+      <guid>https://bcmryan.com/bio/practical-experience/</guid>
+      <description>Language and Linguistics  Instructor at the university level: technology in linguistic research (summer semester 2018–summer semester 2019) Copy-editing: Copy-editor (2019–present) at Copernicus Publications, Research Assistant at the Collaborative Research Center 948 (2016–2017), freelance English copy-editor (2017–present) English as a Foreign Language: Instructor (2015–2017), Tutor (2013–2014) Research: German - Research Methods (2013–present), Dialectology (2015), Kiezdeutsch (2014); Menominee - Transcription (2015), Particle Analysis (2012); Japanese - Loanword Phonology (presented at WIGL 2015); Ukrainian - Field Methods (2015); Yoruba - Field Methods (2014)  In the fields of language and linguistics, I have been in the classroom as a student and teacher, in the lab as a research assistant and in the field as a research and educator.</description>
+    </item>
+    
+    <item>
+      <title>Table of contents</title>
+      <link>https://bcmryan.com/repi/table-of-contents/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/table-of-contents/</guid>
+      <description>Introduction
+Hardware
+Operating system
+Network enumeration and authentication
+Storage
+File sharing with Samba
+Containerization with Docker
+Maintenance
+Conclusion</description>
+    </item>
+    
+    <item>
+      <title>Education</title>
+      <link>https://bcmryan.com/bio/education/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/bio/education/</guid>
+      <description>Menomonie High School I graduated from Menomonie High School in 2011 with the Presidential Education Award, the World Language Department Award and as a two-time Advanced Placement Scholar with Distinction. I was an active student, having had served on multiple boards at my high school and in my local community, competing numerous times in state-level Forensics competitions as well as local theater performances and working part-time as a Certified Nurse Aide.</description>
+    </item>
+    
+    <item>
+      <title>Introduction</title>
+      <link>https://bcmryan.com/repi/introduction/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/introduction/</guid>
+      <description>The Reproducible Raspberry Pi (RePi) server build project aims to walk you step by step through the stages of building a Raspberry Pi server that is stable, secure and, as the name suggests, reproducible. The specific setup that will be documented in this tutorial consists of a Raspberry Pi 4 connected to a hard drive array which will serve files directly to devices on the local network and interface with users via other means (specifically through a containerized media player).</description>
+    </item>
+    
+    <item>
+      <title>Hardware</title>
+      <link>https://bcmryan.com/repi/hardware/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/hardware/</guid>
+      <description>The hardware used in this project is based around the Raspberry Pi 4 single-board computer and other consumer grade parts. The hardware, just like the software in this build tutorial, was chosen because it is easy to find and easy to replace if needed. Nothing used here is artisan or botique or customed designed; it is there to be used, reused and desposed of as needed. But do not fret, the end product does not look that bad.</description>
+    </item>
+    
+    <item>
+      <title>Operating system</title>
+      <link>https://bcmryan.com/repi/operating-system/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/operating-system/</guid>
+      <description>The operating system is a computer&amp;rsquo;s main intersection point between hardware, software and firmware. In this build we will mainly be communicating with the Raspberry Pi server&amp;rsquo;s operating system through the use of a terminal emulator. We will for instance tell the operating system to download or install applications (or lower-level firmware or kernel updates), thus affecting the system&amp;rsquo;s software, and even shut down the server via a command, thus physically affecting the hardware&amp;rsquo;s state by use of a terminal emulator.</description>
+    </item>
+    
+    <item>
+      <title>Network enumeration and authentication</title>
+      <link>https://bcmryan.com/repi/network-enumeration-and-authentication/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/network-enumeration-and-authentication/</guid>
+      <description>Network enumeration and authentication are all about knowing which device is which on a network and proving to a device that a user is who they say there are.
+SSH In order to issue commands to a server over the network from our local computer, we rely on the Secure Shell Protocol (SSH).
+As SSH is not enabled by default in Raspberry Pi OS, it must be activated before the first boot.</description>
+    </item>
+    
+    <item>
+      <title>Storage</title>
+      <link>https://bcmryan.com/repi/storage/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/storage/</guid>
+      <description>With the base of the system set up, the next component to add your Raspberry Pi server to get it off the ground as a file server is storage. As stated above, this tutorial follows the following setup: an array of hard drives (which do not need to be from the same manufacturer or of the same size; formatted in this example as ext4) inside an enclosure connected to the Raspberry Pi via USB 3.</description>
+    </item>
+    
+    <item>
+      <title>File sharing with Samba</title>
+      <link>https://bcmryan.com/repi/file-sharing-with-samba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/file-sharing-with-samba/</guid>
+      <description>With a central directory merging all of your large storage drives together, it is time to make them accessible over your local network with Samba, a reimplementation of the Server Message Block SMB protocol. Although SMB usually is targeted at use with Windows computers, as it allows for networking between Windows, Linux and macOS (all of which are represented in my house), it is what I use on my local network.</description>
+    </item>
+    
+    <item>
+      <title>Containerization with Docker</title>
+      <link>https://bcmryan.com/repi/containerization-with-docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/containerization-with-docker/</guid>
+      <description>If you have been following along, you should now be able to access any directory or file via Samba on pretty much any computer or smart device connected through your local network. That is pretty neat. If that is enough for you and your needs, you can stop right here, but if you start exploring the world of containerization with Docker, continue along.
+In short, containerization allows you to run a computer system within a larger operating system.</description>
+    </item>
+    
+    <item>
+      <title>Maintenance</title>
+      <link>https://bcmryan.com/repi/maintenance/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/maintenance/</guid>
+      <description>Once you have sucessfully set up and started using your new Raspberry Pi server, it is crucial that you keep your system up to date and keep your application data backed up. Luckily, with the skills you have acquired or reinforced through this tutorial, you should be absolutely fine doing so. Linux is an incredibly powerful base to the Rasbperry Pi OS explored in this tutorial, and its standard tools work very well for the maintaince of your system.</description>
+    </item>
+    
+    <item>
+      <title>Conclusion</title>
+      <link>https://bcmryan.com/repi/conclusion/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/repi/conclusion/</guid>
+      <description>So there you have it. Welcome to your fully functional file and media server.
+Let us review what you did in this tutorial. First, you downloaded Raspberry Pi OS and flashed it to a microSD card. From your desktop, you then set up SSH and gave yourself permanent access to the terminal emulator of the Raspberry Pi with an SSH key. Additionally, you set static IP addresses on both your desktop and Raspberry Pi so that you do have to fumble around with dynamically allocated addresses.</description>
+    </item>
+    
+    <item>
+      <title>Brendan Ryan</title>
+      <link>https://bcmryan.com/home/subheader/</link>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://bcmryan.com/home/subheader/</guid>
+      <description>Hi, I&amp;rsquo;m Brendan Ryan. I am currently an English-language copy editor at the open-access academic publishing house Copernicus Publications. In this position, I copy edit academic articles that span the natural sciences before they are released to accessed by anyone, anywhere, with no limitations, and free of charge.
+I completed my Master of Arts in European Linguistics (Europäische Sprachwissenschaft) at the University of Freiburg (Albert-Ludwigs-Universität Freiburg) in Freiburg im Breisgau, Germany in 2017.</description>
+    </item>
+    
+  </channel>
+</rss>

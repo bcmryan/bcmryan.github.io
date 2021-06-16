@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en_US">
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+  	<meta name="description" content="">
+  	<meta name="author"      content="map[]">
+    
+    	<title>Network enumeration and authentication</title>
+	<link rel="shortcut icon" href="https://bcmryan.comimages/favicon.icon">
+
+	
+	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	
+	
+	<script defer src="https://use.fontawesome.com/releases/v5.0.11/js/all.js" integrity="sha384-ImVoB8Er8knetgQakxuBS4G3RSkyD8IZVVQCAnmRJrDwqJFYUE4YOv+DbIofcO9C" crossorigin="anonymous"></script>
+	
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	
+	
+  
+  <link rel="stylesheet" href="https://bcmryan.com/css/styles.min.64a6643395c6bf1ec6fff31d6429046b3ad467e58a279ff252dc019edd80a87051cf90b7fe2d589277def72d84602dcbc7115e2e17a94db3a8838336986a0ae3.css" integrity="sha512-ZKZkM5XGvx7G//MdZCkEazrUZ&#43;WKJ5/yUtwBnt2AqHBRz5C3/i1Yknfe9y2EYC3LxxFeLhepTbOog4M2mGoK4w==">
+
+   
+  
+
+  </head>
+  
+  <body class="home">
+
+    
+      <header id="header">
+  <div id="head" class="parallax" data-parallax-speed="2" style="background-image:url('https://bcmryan.com');">
+    <h1 id="logo" class="text-center">
+      <img class='img-circle' src="https://bcmryan.comimages/brendanryan.jpg" alt="">
+      <span class="title">Brendan Ryan</span>
+      <span class="tagline">At the intersection of technology and liberal arts<br>
+        <a href="mailto:"></a>
+      </span>
+   </h1>
+</div>
+
+<nav class="navbar navbar-default navbar-sticky">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav">
+            
+                
+                <li>
+                    <a href="/">home</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/bio/">bio</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/repi/">RePi</a>
+                </li>
+                
+            
+            </ul>
+
+        </div> 
+        
+    </div>
+</nav>
+
+</header>
+    
+ 
+    
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			<div class="col-sm-8 col-sm-offset-2">
+
+ 				<article class="post">
+					<header class="entry-header">
+ 						<div class="entry-meta">
+
+ 						</div>
+ 						<h1 class="entry-title"><a href="https://bcmryan.com/repi/network-enumeration-and-authentication/" rel="bookmark">Network enumeration and authentication</a></h1>
+					</header>
+					<div class="entry-content">
+						<p>Network enumeration and authentication are all about knowing which device is which on a network and proving to a device that a user is who they say there are.</p>
+<h2 id="ssh">SSH</h2>
+<p>In order to issue commands to a server over the network from our local computer, we rely on the Secure Shell Protocol (<a href="https://en.wikipedia.org/wiki/Secure_Shell_Protocol">SSH</a>).</p>
+<p>As SSH is not enabled by default in Raspberry Pi OS, it must be activated before the first boot.
+[To do this])(<a href="https://www.raspberrypi.org/documentation/remote-access/ssh/README.md),">https://www.raspberrypi.org/documentation/remote-access/ssh/README.md),</a> we are going to <a href="https://en.wikipedia.org/wiki/Touch_(command)"><code>touch</code></a> (in this case create; if a file were to already exist at that location, it would have its access and/or modification date updated) a blank file on the <code>boot</code> partition of our microSD card (which is located in this example at <code>/media/bcmryan/boot</code>).</p>
+<p><code>bcmryan@desktop:~$ touch ssh /media/bcmryan/boot</code></p>
+<p>It is now time to unmount and physically remove the microSD card from your computer.
+Remember to use your correct mount points.</p>
+<p><code>bcmryan@desktop:~$ sudo umount /media/bcmryan/boot /media/bcmryan/rootfs</code></p>
+<p>Confirm with <code>lsblk</code> that the devices have been unmounted.
+To be extra safe before removing the microSD card, it may be worth it to fully power off the USB device with <a href="http://manpages.ubuntu.com/manpages/bionic/man1/udisksctl.1.html"><code>udisksctl</code></a> before physically removing it.</p>
+<p><code>bcmryan@desktop:~$ udisksctl power-off --block-device /dev/sdd</code></p>
+<h2 id="network-enumeration">Network enumeration</h2>
+<p>Now it is time to remove insert the microSD card into the Raspberry Pi for its first boot.
+There is just one problem: we know that SSH is enabled and that we should be able to access it, but we do not know the actual local IP address of the server.
+No worries, there is a simple Linux command line tool that will help us figure out the IP addresses that are being used on the local network.
+From there, you should be able to figure out the IP address that belongs to the Pi.</p>
+<p>Now I am going to ping raspberrypi.local, and <a href="https://www.raspberrypi.org/documentation/remote-access/ip-address.md">as long as my desktop supports mDNS</a>, I should be able to find my Raspberry Pi&rsquo;s IP address.
+(If you get an error about the hostname not being able to be resolved, see the FAQs below.)</p>
+<p><code>bcmryan@desktop:~$ ping raspberrypi.local</code></p>
+<p>Great.
+Now I see that my Rasbperry Pi has been assinged the dynamic IP address 192.168.0.5.
+(<a href="https://en.wikipedia.org/wiki/IP_address#IP_address_assignment">Dynamic IP addresses</a> are given on a first-come-first-served basis, starting from the lowest available number, such as 192.168.0.2, since 192.168.0.1 is usually taken by a router, whereas a static IP address is assigned to a specific device and can be anywhere in the available range of the <a href="https://en.wikipedia.org/wiki/Subnetwork">subnet</a>, from 192.168.0.2 to 192.168.0.255.
+The benefits to having a static IP adddress are that you always know the exact location of your device on the network and that no other device will be assigned that address, thus making something such as logging in via SSH much easier.)
+Before I can start trying to log in via SSH onto the Raspberry Pi, I will first need to enable SSH.
+I do so by installing <code>openssh-server</code>.
+From this point on, you should be able to relatively easily use a recent macOS (through the <a href="https://en.wikipedia.org/wiki/Terminal_(macOS)">Terminal app</a>) or Windows 10 (via <a href="https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux">Windows Subsystem for Linux</a> and/or <a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a>) computer, as both systems now support OpenSSH out of the box (but if you have problems, the rest of the tutorial is still geared towards Linux, so you may have to do a bit of troubleshooting to solve your specific problem).</p>
+<p><code>bcmryan@desktop:~$ sudo apt install --yes openssh-server</code></p>
+<p>The command to SSH into another machine is pretty self explanatory: <code>ssh</code> is followed by the username <code>pi</code> followed by <code>@</code>  (this could be left out if the username were the same as my current user on my desktop, i.e. <code>bcmryan</code>) before the local IP address.</p>
+<p><code>bcmryan@desktop:~$ ssh pi@192.168.0.5</code></p>
+<p>(An alternative to using the IP address here would be to use the hostname followed by .local, <code>raspberrypi.local</code>, i.e. <code>bcmryan@desktop:~$ ssh pi@raspberrypi.local</code>.
+I would not recommend this though as you may run into issues resolving the hostname on other operating systems.
+For instance, this method does not work when trying to SSH into the Raspberry Pi while using <a href="https://f-droid.org/en/packages/com.termux/">Termux on Android</a>.)</p>
+<p>I am asked if I want to continue, and I physically type in <code>yes</code>.</p>
+<p>From here, I am prompted for the password (which is <code>raspberry</code>).</p>
+<p>If you have followed me this far, congratulations, you have succesfully logged into a device on your local network via SSH.
+And you did so with a terminal, you little hacker, you.</p>
+<p>Before we get any futher, the first thing we should do is change the password for the user pi on the Raspberry Pi.
+To do so, simply follow the prompt you are first shown while logging in with the command <code>passwd</code>.</p>
+<p><code>pi@repi:~$ passwd</code></p>
+<p>Enter your current password (<code>raspberry</code>) and a new password twice (for this documentation, I will be using <code>passwordpi</code>, as there will be a few passwords that will be set throughout; of course you should use a much more secure password on your machine).</p>
+<p>Now, before we do anything else, it is important to make sure that this newly installed system is fully up to date.
+To do this, we first can update our system via <code>apt</code>.</p>
+<p><code>pi@raspberrypi:~$ sudo apt update --yes &amp;&amp; sudo apt full-upgrade --yes</code></p>
+<p>You may have noticed that you are not prompted for a password when connected to your server via SSH.
+It is definitely nice to not need to enter it so many times, but you also need to remember that entering a password is a security feature, so you may want to double-check even more thoroughly before entering a command with <code>sudo</code>.</p>
+<p><a href="https://en.wikipedia.org/wiki/Network_enumeration">Network enumeration</a> is the act of gathering information about the devices, users, etc. within a network, and with a bit of planning, you can make the job much easier for yourself in the future.
+For instance, coming up with a good <a href="https://en.wikipedia.org/wiki/Computer_network_naming_scheme">network naming scheme</a> will allow you to give your devices a hostname (the <code>desktop</code> or <code>raspberrypi</code> that follows the username in the commands throughout) and/or local static IP address (<code>192.168.0.XYZ</code>) that is meaningful to you and/or your organization.</p>
+<p>My personal hostnames are based on <a href="https://en.wikipedia.org/wiki/List_of_dinosaur_genera">genus names of dinosaurs</a> that end in -saurus.
+My thinking behind this goes that my personal network will never run out of the 1000 or so genus names of Dinosauria ending in -saurus.
+Additionally, I can give my devices names that fit characteristics of that device: my desktop is actually called <code>tyrannosaurus</code>, as it is the king of all devices on my network.
+Were I to upgrade my computer, I could continue calling it <code>tyrannosaurus</code>, or I could choose to retire the name (<a href="https://en.wikipedia.org/wiki/Ship_of_Theseus">because there might be a limit to how many components can be changed before an object is no longer the same object</a>) and call it <a href="https://en.wikipedia.org/wiki/Tarbosaurus"><code>tarbosaurus</code></a> or <a href="https://en.wikipedia.org/wiki/Zhuchengtyrannus"><code>zhuchengtyrannus</code></a>, <a href="https://en.wikipedia.org/wiki/Tyrannosauridae">genera also belonging to the taxonomic family of the tyrant king</a>.
+This is very clearly a silly excercise that I have undertaken, but I found it to be rewarding, and it has kept me from needing to rename my computer <code>desktopoffice</code>, <code>ubuntu2004</code> or <code>bcmryan1</code> whenever a physical machine changes location, operating system or owner.
+Of course on a larger scale, this is untenable.
+In this regard, do as I say, not as I do.
+For a home with a few connected devices, naming machines based on fun charactersitics might be feasible, but once printers, routers, terminals, etc. are involved in a multinational corporation with branches on different levels, inside different buildings and within different cities, it is absolutely vital to come up with a more sustainable naming scheme, potentially based on device type and location (preferably not owner, as this is bound to change much more frequently than an office building&rsquo;s address).</p>
+<p>Similarly, all static IP addresses within my network have some kind of meaning.
+I have reserved the first 20 IP addresses (up to 192.168.0.19) for dynamic addresses, including all those devices which might hop on and off without having been assigned a static IP address (e.g. a tablet which I am testing out but which has not yet been configured).
+From there, every current (and potentially future) member of my household gets 10 IP addresses.
+This is where 192.168.0.20 and 192.168.0.25 from earlier come into play: those are my my main desktop (20) and my phone (25).
+These personal addresses end at 192.168.0.99, and I have reservered 192.168.0.100 for this server.
+I hope that this IP addressing scheme will continue to serve me well, as I have yet to run into any problems.
+Of course, this would be a completely useless excercise if I did not have proper documentation to tell me which IP address is allocated to which person (dynamic, bcmryan, etc.), under which hostname (e.g. <code>tyrannosaurus</code>) on which device (e.g. processor type in desktop computer).
+I have found this information incredibly easy to store in a simple spreadsheet on my computer so that I never have to wonder what the IP address is of any computer I am trying to connect to via SSH.
+How to change a computer&rsquo;s or smartphone&rsquo;s static IP address will of course depend on your device&rsquo;s operating system, be it <a href="https://help.ubuntu.com/stable/ubuntu-help/net-manual.html.en">Ubuntu</a>, <a href="https://support.microsoft.com/en-us/windows/change-tcp-ip-settings-bd0a07af-15f5-cd6a-363f-ca2b6f391ace">Windows</a>, <a href="https://support.apple.com/guide/mac-help/use-dhcp-or-a-manual-ip-address-on-mac-mchlp2718/11.0/mac/11.0">macOS</a>, <a href="https://support.apple.com/en-us/HT202693">iOS</a> or <a href="https://www.businessinsider.com/how-to-change-ip-address-on-android">Android</a>.
+(If you have a link to official Android documentation regarding setting an IP address, please let me know, and I will include it here.)</p>
+<p>Now that we have logged into the Raspberry Pi, it is a good time to change the hostname and set a static IP address so that we always know where to find the machine on our local network.</p>
+<h2 id="hostname">Hostname</h2>
+<p>Changing a hostname can be completed using the very easy-to-use <a href="http://manpages.ubuntu.com/manpages/focal/man1/hostnamectl.1.html">hostnamectl</a> on both Raspberry Pi OS and Ubuntu Server.
+Simply enter <code>hostnamectl set-hostname</code> followed by the new hostname.</p>
+<p><code>pi@raspberrypi:~$ hostnamectl set-hostname repi</code></p>
+<p>You will be asked for your password, and after you enter it, the hostname will be changed, although you will notice that the old hostname is still in use on the command line once you exit.
+That is ok.
+It will change once the system is rebooted after we change the static IP address.</p>
+<p>To make sure that the hostname has been changed throughout the machine, <a href="https://www.cyberciti.biz/faq/ubuntu-change-hostname-command/">you should also edit the file /etc/hosts</a> and update the bottommost line with the old hostname.
+To do this, we will use a CLI text editor such as <code>nano</code> with <code>sudo</code> privileges.
+(<a href="https://en.wikipedia.org/wiki/Editor_war">Arguments can be very heated regarding text editors!</a>)</p>
+<p><code>pi@raspberrypi:~$ sudo nano /etc/hosts</code></p>
+<p>Use your down arrow key to select the appropriate line and the right arrow key to edit it.
+Delete raspberrypi and replace it with repi.
+Save the new document with Ctrl+S, and exit with Ctrl+X.</p>
+<h2 id="static-ip">Static IP</h2>
+<p>As I have stated before, by default, the Raspberry Pi is allocated a dynamic IP address.
+The good news is that <a href="https://www.raspberrypi.org/documentation/configuration/tcpip/README.md">Raspberry Pi OS makes it relatively straightforward to set a static IP address</a>. (It should be noted that this is different than <a href="https://ubuntu.com/server/docs/network-configuration">setting an IP address on Ubuntu Server</a>.)</p>
+<p>But to show the power of the command line, we will instead just text append (add text to the end of a text file) using <a href="https://en.wikipedia.org/wiki/Tee_(command)"><code>tee</code></a>.
+The following command will append the configuration via <code>tee -a</code> with <code>sudo</code> privileges to <code>/etc/dhcpcd.conf</code> while defining <code>eth0</code> (Ethernet) as the interface we would like to use with the static IP address 192.168.0.100 with a router at 192.168.0.1 and Google&rsquo;s DNS server at 8.8.8.8.
+A title can be given to the configuration with a title (Static IP configuration) following a hash (#), which notes that what follows on that line is a comment.
+END on both sides of new lines act as bookmarks to show which text should be appended, and the two less-than signs point to the file to which the text should be appended.</p>
+<pre><code>pi@raspberrypi:~$ sudo tee -a /etc/dhcpcd.conf &lt;&lt; END
+
+# Static IP configuration:
+interface eth0
+static ip_address=192.168.0.100/24    
+static routers=192.168.0.1
+static domain_name_servers=8.8.8.8
+END
+</code></pre><p>After entering the command, you will be warned that the host raspberrypi does not exist.
+That is completely accurate, as we just changed the hostname, but do not worry, this is not a problem, and your new hostname and static IP address will work fine.</p>
+<p>To verify that the text has been correctly added to <code>/etc/dhcpcd.conf</code>, you can see the files contents by using the <a href="https://en.wikipedia.org/wiki/Cat_(Unix)"><code>cat</code></a> (concatenate) command.</p>
+<p><code>pi@raspberrypi:~$ cat /etc/dhcpcd.conf</code></p>
+<p>From here, we need to reboot the Raspberry Pi to have all changes take effect.</p>
+<p><code>pi@raspberrypi:~$ sudo reboot</code></p>
+<p>Before we try logging onto the Raspberry Pi for the first time with the new static IP address (192.168.0.100), it is a good idea to delete fingerprint that we accepted for the old dynamic IP address (192.168.0.5).
+Otherwise, there may be problems in the future if you ever try to SSH into another machine that shares the same dynamically given IP address.
+<strong>This is potentially dangerous if you use SSH with multiple devices, so make sure that you know which fingerprint of which IP address you are deleting.</strong></p>
+<p><code>bcmryan@desktop:~$ ssh-keygen -f &quot;/home/bcmryan/.ssh/known_hosts&quot; -R &quot;192.168.0.5&quot;</code></p>
+<p>Now we it is time to cross our fingers and try to log onto the Raspberry Pi with a static IP address.</p>
+<p><code>bcmryan@desktop:~$ ssh pi@192.168.0.100</code></p>
+<p>To accept the new fingerprint, physically type in <code>yes</code>.
+To complete the login, enter in the password.</p>
+<p>And it was successful!
+The Raspberry Pi is now on its statically given IP address of 192.168.0.100, and the command line now reads <code>pi@repi:~$</code>.
+What is also neat is that the IP address of the desktop from which you connected via SSH to the Raspberry Pi is also shown.
+In my case, that is 192.168.0.20.
+Having a logical system in place for IP addresses tells me that I last succesfully logged in from the desktop that I am working from.</p>
+<h2 id="ssh-keys">SSH keys</h2>
+<p>We usually authenticate our identity using a password, but that is not the only way (as you may know from certain applications that require a fingerprint or <a href="https://en.wikipedia.org/wiki/Multi-factor_authentication">multi-factor authentication</a> for which you for instance have to verify your identity with a password and a SMS or email code).
+Authentication for SSH can be done through at least two different methods, by use of a password and/or a key.
+With password authentication, you are tell your desktop through a terminal command that you would like to log on to a server (or other remote machine) at a specific IP address with a certain username.
+Just like when entering a command with <code>sudo</code>, you are asked for the password of that other user on that other machine.
+With authentication via SSH keys, it is not required that you provide a password (although you can enable two-factor authentication requiring a password).
+Instead, a private key (which is just a text file with a few hundred random characters) saved onto your desktop sees if it fits to a public key saved on the server.
+Although these two keys are not identical, if a specific algorithm determines that they are a match, you can log on via your desktop to to the server.</p>
+<p>In this section, we are going to share SSH keys between the desktop and Raspberry Pi server so that we no longer need to type in a password following the command <code>ssh pi@192.168.0.100</code>.
+Following the <a href="https://www.raspberrypi.org/documentation/remote-access/ssh/passwordless.md">official documentation</a> we are going to first generate new SSH keys on the desktop with <code>ssh-keygen</code>.</p>
+<p><code>bcmryan@desktop:~$ ssh-keygen</code></p>
+<p>You will be asked where to save the key.
+Hit enter to save it in its default location (this will create a public key at <code>~/.ssh/id_rsa.pub</code> and a private key at <code>~/.ssh/id_rsa</code> on the desktop).
+You will also be asked for a passphrase.
+You may choose to not enter anything here (it encrypts the key) and accept the default setting by again hitting enter.
+Enter your passphrase again and/or hit enter to continue.</p>
+<p>Now you will share public key with your server with <code>ssh-copy-id</code>.
+This will log you into the user (<code>pi</code>) given at the IP address (192.168.0.100).
+It is of course important that the static IP address is set at this point so that the desktop shares the key with the correct server and that its address does not change, which would cause problems while attempting to connect at a later time.</p>
+<p><code>bcmryan@desktop:~$ ssh-copy-id pi@192.168.0.100</code></p>
+<p>Once we enter the command, we are prompted for the password of user <code>pi</code> on 192.168.0.100.
+This is the password that was set above, i.e. <code>passwordpi</code> (thus adding the contents of the public key on the desktop at <code>~/.ssh/id_rsa.pub</code> to the Raspberry Pi at <code>~/.ssh/authorized_keys</code>).</p>
+<p>From here, you should be able to SSH into the Raspberry Pi server (provided that both the desktop and server have static IP addresses) without being prompted for a password.</p>
+<p><code>bcmryan@desktop:~$ ssh pi@192.168.0.100</code></p>
+<p>And it worked!
+Although <code>ssh-copy-id</code> will not natively run on Windows 10 using PowerShell, there is a <a href="https://www.chrisjhart.com/Windows-10-ssh-copy-id/">work-around PowerShell one-line script</a> that affectively does the same thing by copying the contents of <code>$env:USERPROFILE\.ssh\id_rsa.pub</code> (the Windows equivalent of <code>~\.ssh/id_rsa.pub</code>) on a Windows desktop and appending (<code>cat &gt;&gt;</code>) it to <code>~/.ssh/authorized keys</code> on the Raspberry Pi server.</p>
+<p><code>PS C:\Users\bcmryan&gt; $env:USERPROFILE\.ssh\id_rsa.pub | ssh pi@192.168.0.100 &quot;cat &gt;&gt; .ssh/authorized_keys&quot;</code></p>
+<p>To recap, we can now access the terminal emulator as user <code>pi</code> of the Raspberry Pi server with a hostname of <code>repi</code> and a static IP of 192.168.0.100 across the local network using SSH without needing to enter a password.
+That is pretty spectacular, and we are well on our way to being able to set up and administer a full server.</p>
+
+					</div>
+				</article>
+
+			</div>
+		</div> 
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="share">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="comments">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+	</div>	
+
+</main>
+
+    
+    
+      <footer id="footer">
+	<div class="container">
+		<div class="row">
+			
+
+			
+			<div class="col-md-3 widget">
+				<h3 class="widget-title">Contact me</h3>
+				<div class="widget-body">
+					<p class="follow-me-icons">
+            
+							
+								<a href="https://twitter.com/bcmryan" target="_blank"><i class="fab fa-twitter-square fa-1x"></i></a>
+							
+            
+							
+								<a href="https://www.linkedin.com/in/bcmryan" target="_blank"><i class="fab fa-linkedin fa-1x"></i></a>
+							
+            
+							
+								<a href="https://github.com/bcmryan" target="_blank"><i class="fab fa-github fa-1x"></i></a>
+							
+            
+							
+								<a href="mailto:bcm.ryan@gmail.com" target="_blank"><i class="fas fa-envelope-square fa-1x"></i></a>
+							
+            
+					</p>
+				</div>
+			</div>
+			
+
+			
+
+			
+
+		</div> 
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p></p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						
+						Copyright &copy; Brendan Ryan<br>
+						Designed as <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> - 
+						Powered by <a href="https://gohugo.io/" rel="poweredby">Hugo</a> - 
+						Hosted at <a href="https://gohugo.io/" rel="poweredby">GitHub</a>
+					</p>
+				</div>
+			</div>
+
+		</div> 
+	</div>
+</footer>
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+
+
+<script src="https://bcmryan.com/js/bundle.min.f4a965ad0a8118e32f8f0f158ff3aadbacf700934c22286a1a5b245105e9006da73a873b001a160db22498909c1df14d1f835dba5ad76f80b32b0234182b2a58.js" integrity="sha512-9KllrQqBGOMvjw8Vj/Oq26z3AJNMIihqGlskUQXpAG2nOoc7ABoWDbIkmJCcHfFNH4NdulrXb4CzKwI0GCsqWA=="></script>
+
+</body>
+</html>
+
+    
+
+
+      
+
+  </body>
+  
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en_US">
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+  	<meta name="description" content="">
+  	<meta name="author"      content="map[]">
+    
+    	<title>Storage</title>
+	<link rel="shortcut icon" href="https://bcmryan.comimages/favicon.icon">
+
+	
+	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
+	
+	
+	<script defer src="https://use.fontawesome.com/releases/v5.0.11/js/all.js" integrity="sha384-ImVoB8Er8knetgQakxuBS4G3RSkyD8IZVVQCAnmRJrDwqJFYUE4YOv+DbIofcO9C" crossorigin="anonymous"></script>
+	
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alice|Open+Sans:400,300,700">
+	
+	
+  
+  <link rel="stylesheet" href="https://bcmryan.com/css/styles.min.64a6643395c6bf1ec6fff31d6429046b3ad467e58a279ff252dc019edd80a87051cf90b7fe2d589277def72d84602dcbc7115e2e17a94db3a8838336986a0ae3.css" integrity="sha512-ZKZkM5XGvx7G//MdZCkEazrUZ&#43;WKJ5/yUtwBnt2AqHBRz5C3/i1Yknfe9y2EYC3LxxFeLhepTbOog4M2mGoK4w==">
+
+   
+  
+
+  </head>
+  
+  <body class="home">
+
+    
+      <header id="header">
+  <div id="head" class="parallax" data-parallax-speed="2" style="background-image:url('https://bcmryan.com');">
+    <h1 id="logo" class="text-center">
+      <img class='img-circle' src="https://bcmryan.comimages/brendanryan.jpg" alt="">
+      <span class="title">Brendan Ryan</span>
+      <span class="tagline">At the intersection of technology and liberal arts<br>
+        <a href="mailto:"></a>
+      </span>
+   </h1>
+</div>
+
+<nav class="navbar navbar-default navbar-sticky">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+
+            <ul class="nav navbar-nav">
+            
+                
+                <li>
+                    <a href="/">home</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/bio/">bio</a>
+                </li>
+                
+            
+                
+                <li>
+                    <a href="/repi/">RePi</a>
+                </li>
+                
+            
+            </ul>
+
+        </div> 
+        
+    </div>
+</nav>
+
+</header>
+    
+ 
+    
+<main id="main">
+
+	<div class="container">
+
+		<div class="row topspace">
+			<div class="col-sm-8 col-sm-offset-2">
+
+ 				<article class="post">
+					<header class="entry-header">
+ 						<div class="entry-meta">
+
+ 						</div>
+ 						<h1 class="entry-title"><a href="https://bcmryan.com/repi/storage/" rel="bookmark">Storage</a></h1>
+					</header>
+					<div class="entry-content">
+						<p>With the base of the system set up, the next component to add your Raspberry Pi server to get it off the ground as a file server is storage.
+As stated above, this tutorial follows the following setup: an array of hard drives (which do not need to be from the same manufacturer or of the same size; formatted in this example as ext4) inside an enclosure connected to the Raspberry Pi via USB 3.
+In this section we will merge the indepedent file systems so as to make your Raspberry Pi show a continuous file system (thus, for instance, four 8 TB hard drives would appear as a single 32 TB file system making it much easier to point a media server to a single directory instead of needing to add multiple).</p>
+<h2 id="user-permissions">User permissions</h2>
+<p>Before we even start with the process of merging file systems, it is a good idea to create two users and one group on the system that serve a singular purpose: to be own the files on the hard drives.
+Without going too far into <a href="https://en.wikipedia.org/wiki/File-system_permissions">file system permissions</a>, our purpose is to create one user who has read and write access to the files and another user who can only read them.
+These two users will belong to the same group.
+This will allow us to grant read-write permissions to certain applications or when we specifically request them while defaulting to read-only permissions if we do not want to change anything.
+This, for instance, can protect against data loss if a program, such as Jellyfin, which will be installed below, <a href="https://www.reddit.com/r/jellyfin/comments/f6hwsr/jellyfin_deleting_files/">attempts to delete user data</a>, due to either user or system error.
+Regardless of who is at fault for a specific error, if a program does not have read-write access to a directory, it cannot modify it.</p>
+<p>Using the <a href="http://manpages.ubuntu.com/manpages/focal/man8/groupadd.8.html"><code>groupadd</code></a> command, we are going to create the group storage with the specific GID (<code>--gid</code>; group identification number) 200 as a system (<code>--system</code>) group.
+Having a preset GID comes in handy when granting specific programs (such as Jellyfin) the permissions of a certain group.
+A <a href="https://askubuntu.com/a/524010">system group is not inherently different from a normal group</a> but is conventionally used for technically processes, not users.
+For instance, no human user will belong to the group storage, as it is solely to resolve or avoid permission issues, whereas a group called family might allow multiple users on a Linux computer to share photos with one another in a single directory, with each user being able to add, modify or deletes files therein.</p>
+<p><code>pi@repi:~$ sudo groupadd --system --gid 200 storage</code></p>
+<p>Similarly, we now create two users belonging to the group storage: storagerw (rw for read-write permissions; this one will be the owner of our shared directory) and storagero (ro for read-only permissions; this one will belong to the group storage and thus be given permission to access files but not modify or delete them).
+Using the <a href="http://manpages.ubuntu.com/manpages/focal/man8/useradd.8.html"><code>useradd</code></a> command, for the same reasons as above we specify the UID (<code>--uid</code>; user identification number) and GID (<code>--gid</code>; so that both accounts belong within the group storage with a GID of 200) and set both accounts as system accounts (<code>--system</code>).
+Note that user storagerw is given the UID 200, while user storagero is 201.
+This should be somewhat memorable: the UID that matches the GID has read-write permissions, while the UID that is slightly different is a single number off.</p>
+<p><code>pi@repi:~$ sudo useradd --system --uid 200 --gid 200 storagerw &amp;&amp; sudo useradd --system --uid 201 --gid 200 storagero</code></p>
+<p>So that no one attempts to log in using these user accounts (potentially to gain access to the system), we can lock them with the <code>usermod</code> command and the <code>--lock</code> option (repeated for both users).</p>
+<p><code>pi@repi:~$ sudo usermod --lock storagerw &amp;&amp; sudo usermod --lock storagero</code></p>
+<p>To confirm that the new user accounts have been properly added to the group storage and to confirm their UID, we can use the <code>id</code> command followed by the user name (repeated for both users).</p>
+<p><code>pi@repi:~$ id storagerw &amp;&amp; id storagero</code></p>
+<p>To verify that both accounts are system accounts (and thus not intended for human use), if you list the directories in <code>/home</code>, you will note that only user pi is given a <code>/home</code> directory.
+For the <a href="https://en.wikipedia.org/wiki/Ls"><code>ls</code></a> (list) command, note that I perfer adding the options for horizontally (<code>l</code>) listing all (<code>a</code>; thus including hidden files) directories and files with human-readable (<code>h</code>; thus in kilobytes, megabytes, etc., not bytes) file sizes.</p>
+<p><code>pi@repi:~$ ls -lah /home</code></p>
+<h2 id="mergerfs">mergerfs</h2>
+<p>Following <a href="https://blog.linuxserver.io/2017/06/24/the-perfect-media-server-2017/">The Perfect Media Server 2017</a> build guide (along with its <a href="https://www.youtube.com/watch?v=tbCMfm-jJ5Y">accompanying YouTube video</a> and <a href="https://perfectmediaserver.com/tech-stack/mergerfs/">general information on mergerfs</a>; from which this section is very heavily inspired, including many commands), we install <a href="https://github.com/trapexit/mergerfs">mergerfs</a>, a union file system that allows for individual block storage devices (e.g. hard drives) to appear as a single device to the operating system and programs.
+As stated in the <a href="https://github.com/bcmryan/repi#storage">Storage</a>, this allows for four individual drives, including those of different sizes and from different manufacturers, to be housed in a single directory.
+Thus, instead of needing to add four different paths to a media server (i.e. one for each hard drive), you can add a single path which combines all the hard drives in one directory.</p>
+<p>Now, aftering confirming that your enclosure with hard drives installed is physically connected to the Raspberry Pi, turn on the enclosure.
+If you run <code>lsblk</code>, you will notice that your individual drives are not listed.
+This is exactly as it should be because the devices have not been given a mount point.
+To confirm that your Raspberry Pi sees the hard drives, you should instead run <code>sudo blkid</code> (block device identification).</p>
+<p><code>pi@repi:~$ sudo blkid</code></p>
+<p>Here you are shown all block devices connected to your Raspberry Pi first identified by their location as a <code>/dev</code> directory followed by information such as their label, UUID (an ID that identifies a specific block device and will probabistically never be used for another block device), type (i.e. file system), etc.
+The devices that represent the attached hard drives with be listed as e.g. <code>/dev/sda1</code> to <code>/dev/sdd1</code> for four devices with a single partition each.
+I know that my enclosure lists the hard drives from top to bottom, i.e. with the topmost hard drive as <code>/dev/sda1</code> and the bottommost as <code>/dev/sdd1</code>.
+If you are also so lucky as to have standardized scheme, it may help you to physically group your hard drives so that you know which data are held in a specific area (e.g. with the top two hard drives holding only family photos so that you know that all photos are in <code>/dev/sda1</code> and <code>/dev/sdb1</code>).
+You should now note the UUID of each hard drive, as these will be used below.</p>
+<p>Before beginning, you must install mergerfs and fuse via <code>apt</code>.</p>
+<p><code>pi@repi:~$ sudo apt install --yes mergerfs fuse</code></p>
+<p>Now it is time to create mount points for all the hard drives.
+To do this, we use the <code>mkdir</code> (make directory) command with elevated privileges in the <code>/mnt</code> (mount) directory to create directories for each individual hard drive and a combined directory for all hard drives together.
+Using a feature of the <a href="https://en.wikipedia.org/wiki/Bash_(Unix_shell)">Bash</a> shell (the command line interpreter into which you have been typing) called <a href="https://en.wikipedia.org/wiki/Bash_(Unix_shell)#Brace_expansion">brace expansion</a>, you can create multiple directories at once so long as the unique parts are entered within curly brackets and separated with commas.
+For this example, I am creating 16 directories with 10 representing the content stored on each of the hard drives, 5 representing parity drives for use with SnapRAID and 1 representing the combined contents of all others via mergerfs: <code>/mnt/diskMovies1</code> to <code>/mnt/diskMovies5</code>, <code>/mnt/diskSeries1</code> to <code>/mnt/diskSeries5</code>, <code>/mnt/parity1</code> to <code>/mnt/parity5</code> and <code>/mnt/storage</code>.
+Note that as my hard drives only hold media (backups of my extensive DVD and Blu-Ray collection, which is <a href="https://en.wikipedia.org/wiki/Ripping#Legality">legal in my jurisdiction</a>), I am labeling the hard drive locations according to the type of media they are holding (i.e. movies and series).
+(Note also that my files are structured according to Jellyfin standards for <a href="https://jellyfin.org/docs/general/server/media/movies.html">movies</a> and <a href="https://jellyfin.org/docs/general/server/media/shows.html">shows</a>.)
+You should of course modify this to meet your individual needs (e.g. if you are hosting family photos and documents, <code>/mnt/diskPhoto</code> and <code>/mnt/diskDoc</code>).
+(Labeling the directories with trailing numbers and creating more directories than I have hard drives give me flexibility were I to combine two hard drives into a single one with a larger capacity or add more drives in a larger enclosure.)</p>
+<p><code>pi@repi:~$ sudo mkdir /mnt/{disk{Movies,Series}{1,2,3,4,5},parity{1,2,3,4,5},storage}</code></p>
+<p>From here, it is time to automatically mount the hard drives when the Raspberry Pi boots up and merge the contents into one directory, namely <code>/mnt/storage</code>.
+To do this, we have to add entries to <a href="https://en.wikipedia.org/wiki/Fstab"><code>fstab</code></a> (file systems table; at <code>/etc/fstab</code>).
+The entries include the UUID noted earlier, mount location (e.g. <code>/mnt/diskMovies1</code>), file system type (which is assumed to be ext4), options, dump and pass.
+We add the following information (of course with your individual UUIDs replacing longstring) to <code>/etc/fstab</code> with the <code>tee</code> command as in <a href="https://github.com/bcmryan/repi#static-ip">Static IP</a>.
+The final line is the actual mergerfs setup.
+The first column groups all directories that begin with <code>/mnt/disk</code> (using the <a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing wildcard asterisk</a> to signify anything or nothing following) and mounts them together in <code>/mnt/storage</code> (second column) as the file system fuse.mergerfs (third column).
+The fourth column lists options following the default setup in the <a href="https://github.com/trapexit/mergerfs">mergerfs documentation</a> with certain changes: first, option cache.files=off is removed, as it is not recognized via the standard upstream installation with <code>apt</code>; second mergerfs is now path perserving (i.e. if a directory already exists, a newly created file will go into the directory on the same hard drive instead of making a new directory on a different hard drive); and third it has been given the name mergerfs when listed using <code>df -h</code> (disk free space in human-readable terms).
+Finally, dump and pass are both left as 0.</p>
+<pre><code>pi@repi:~$ sudo tee -a /etc/fstab &lt;&lt; END
+
+# Mount points for individual hard drives for use with mergerfs at /mnt/disk{Movies,Series}{1,2,3,4,5}
+UUID=longstring /mnt/diskMovies1 ext4 defaults 0 0
+UUID=longstring /mnt/diskMovies2 ext4 defaults 0 0
+UUID=longstring /mnt/diskMovies3 ext4 defaults 0 0
+UUID=longstring /mnt/diskSeries1 ext4 defaults 0 0
+
+# mergerfs mount point at /mnt/storage
+/mnt/disk* /mnt/storage fuse.mergerfs allow_other,use_ino,dropcacheonclose=true,category.create=epmfs,fsname=mergerfs 0 0
+END
+</code></pre><p>You can confirm that <code>/etc/fstab</code> has been correctly edited using the <code>cat</code> command.</p>
+<p><code>pi@repi:~$ cat /etc/fstab</code></p>
+<p>Now to mount all devices according to the entries in <code>/etc/fstab</code> (i.e. mount the drives we just defined into their new mount points), use the <code>mount</code> command with the <code>--all</code> option with elevated privileges.</p>
+<p><code>pi@repi:~$ sudo mount --all</code></p>
+<p>To verify that all directories have been properly mounted, list all directories in <code>/mnt</code> and you will see that the mounted directories are no longer owned by user root and group root.</p>
+<p><code>pi@repi:~$ ls -lah /mnt</code></p>
+<p>To view the new combined directory of <code>/mnt/storage</code>, list all directories in <code>/mnt/storage</code>.</p>
+<p><code>pi@repi:~$ ls -lah /mnt/storage</code></p>
+<p>Now that we can access all directories and files in the merged directory of <code>/mnt/storage</code>, it is time to use the <code>chown</code> (change owner) command with the <code>--recursive</code> option and elevated privileges to define user storagerw and group storage as the directory&rsquo;s owner.
+Keeping the default permissions (<code>drwxr-xr-x</code>, shown when using <code>ls -lah /mnt</code> annd looking at <code>/mnt/storage</code>), this means that user storagerw will have read-write (and execute) privileges, while anyone belonging to group storage (such as user storagero) will only be able to read (and execute) from the directory but neither modify, delete nor create files or directories within it.
+For this command, you can either specify the UID and GID (i.e. 200:200) or the user&rsquo;s and group&rsquo;s name (storagerw:storage).
+Note that depending on how many directories and files are stored within <code>/mnt/storage</code>, this may take a few minutes (as it needs to change the permissions on every individual directory and file).</p>
+<p><code>pi@repi:~$ sudo chown --recursive storagerw:storage /mnt/storage</code></p>
+<p>Once you are returned to a blank command line, you can now see the changes to the ownership of <code>/mnt/storage</code> by listing all directories in <code>/mnt</code>.
+Additionally, you will notice that all directories that merge into <code>/mnt/storage</code> also are now owned by user storagerw and group storage.</p>
+<p><code>pi@repi:~$ ls -lah /mnt</code></p>
+<p>Due to the change in permissions, user pi (the one which we are using) can read but not modify, delete or create files within <code>/mnt/storage</code>.
+This is not a problem, as one can always elevate their privileges with <code>sudo</code> to be able to have read-write permissions or grant themselves permission by specifying which user to use for a certain application (this functionality is called <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#FORCEUSER">force user</a> and <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#FORCEGROUP">force group</a> for Samba and <a href="https://docs.linuxserver.io/general/understanding-puid-and-pgid">PUID and PGID</a> for Docker containers from <a href="https://www.linuxserver.io/">LinuxServer.io</a>).</p>
+<h2 id="snapraid">SnapRAID</h2>
+<p>This section is currently empty, as I have not yet had the opportunity to configure SnapRAID.
+For now, you may want to view the <a href="http://www.snapraid.it/">official SnapRAID website</a> and <a href="https://github.com/amadvance/snapraid">Github page</a> and the tutorial for <a href="https://blog.linuxserver.io/2017/06/24/the-perfect-media-server-2017/">The Perfect Media Server 2017</a> build guide (along with its <a href="https://www.youtube.com/watch?v=Ir5ZsUIbHXA">accompanying YouTube video</a>).</p>
+
+					</div>
+				</article>
+
+			</div>
+		</div> 
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="share">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+
+				<div id="comments">
+					
+				</div>
+			</div>
+		</div> 
+		<div class="clearfix"></div>
+
+	</div>	
+
+</main>
+
+    
+    
+      <footer id="footer">
+	<div class="container">
+		<div class="row">
+			
+
+			
+			<div class="col-md-3 widget">
+				<h3 class="widget-title">Contact me</h3>
+				<div class="widget-body">
+					<p class="follow-me-icons">
+            
+							
+								<a href="https://twitter.com/bcmryan" target="_blank"><i class="fab fa-twitter-square fa-1x"></i></a>
+							
+            
+							
+								<a href="https://www.linkedin.com/in/bcmryan" target="_blank"><i class="fab fa-linkedin fa-1x"></i></a>
+							
+            
+							
+								<a href="https://github.com/bcmryan" target="_blank"><i class="fab fa-github fa-1x"></i></a>
+							
+            
+							
+								<a href="mailto:bcm.ryan@gmail.com" target="_blank"><i class="fas fa-envelope-square fa-1x"></i></a>
+							
+            
+					</p>
+				</div>
+			</div>
+			
+
+			
+
+			
+
+		</div> 
+	</div>
+</footer>
+
+<footer id="underfooter">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p></p>
+				</div>
+			</div>
+
+			<div class="col-md-6 widget">
+				<div class="widget-body">
+					<p class="text-right">
+						
+						Copyright &copy; Brendan Ryan<br>
+						Designed as <a href="http://www.gettemplate.com" rel="designer">Initio by GetTemplate</a> - 
+						Powered by <a href="https://gohugo.io/" rel="poweredby">Hugo</a> - 
+						Hosted at <a href="https://gohugo.io/" rel="poweredby">GitHub</a>
+					</p>
+				</div>
+			</div>
+
+		</div> 
+	</div>
+</footer>
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+
+
+<script src="https://bcmryan.com/js/bundle.min.f4a965ad0a8118e32f8f0f158ff3aadbacf700934c22286a1a5b245105e9006da73a873b001a160db22498909c1df14d1f835dba5ad76f80b32b0234182b2a58.js" integrity="sha512-9KllrQqBGOMvjw8Vj/Oq26z3AJNMIihqGlskUQXpAG2nOoc7ABoWDbIkmJCcHfFNH4NdulrXb4CzKwI0GCsqWA=="></script>
+
+</body>
+</html>
+
+    
+
+
+      
+
+  </body>
+  
+</html>
