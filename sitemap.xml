@@ -2,47 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://bcmryan.com/bio/practical-experience/</loc>
+    <loc>bcmryan.github.io/bio/practical-experience/</loc>
     <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://bcmryan.com/repi/table-of-contents/</loc>
+    <loc>bcmryan.github.io/repi/table-of-contents/</loc>
   </url><url>
-    <loc>https://bcmryan.com/bio/education/</loc>
+    <loc>bcmryan.github.io/bio/education/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/introduction/</loc>
+    <loc>bcmryan.github.io/repi/introduction/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/hardware/</loc>
+    <loc>bcmryan.github.io/repi/hardware/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/operating-system/</loc>
+    <loc>bcmryan.github.io/repi/operating-system/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/network-enumeration-and-authentication/</loc>
+    <loc>bcmryan.github.io/repi/network-enumeration-and-authentication/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/storage/</loc>
+    <loc>bcmryan.github.io/repi/storage/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/file-sharing-with-samba/</loc>
+    <loc>bcmryan.github.io/repi/file-sharing-with-samba/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/containerization-with-docker/</loc>
+    <loc>bcmryan.github.io/repi/containerization-with-docker/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/maintenance/</loc>
+    <loc>bcmryan.github.io/repi/maintenance/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/conclusion/</loc>
+    <loc>bcmryan.github.io/repi/conclusion/</loc>
   </url><url>
-    <loc>https://bcmryan.com/</loc>
+    <loc>bcmryan.github.io/</loc>
     <lastmod>2021-06-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://bcmryan.com/home/subheader/</loc>
+    <loc>bcmryan.github.io/home/subheader/</loc>
     <lastmod>2021-06-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://bcmryan.com/home/</loc>
+    <loc>bcmryan.github.io/home/</loc>
     <lastmod>2021-06-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://bcmryan.com/bio/</loc>
+    <loc>bcmryan.github.io/bio/</loc>
     <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>https://bcmryan.com/categories/</loc>
+    <loc>bcmryan.github.io/categories/</loc>
   </url><url>
-    <loc>https://bcmryan.com/repi/</loc>
+    <loc>bcmryan.github.io/repi/</loc>
   </url><url>
-    <loc>https://bcmryan.com/tags/</loc>
+    <loc>bcmryan.github.io/tags/</loc>
   </url>
 </urlset>
