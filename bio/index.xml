@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Bio on Brendan Ryan</title>
-    <link>bcmryan.github.io/bio/</link>
+    <link>/bio/</link>
     <description>Recent content in Bio on Brendan Ryan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en_US</language>
-    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0200</lastBuildDate><atom:link href="bcmryan.github.io/bio/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0200</lastBuildDate><atom:link href="/bio/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Practical Experience</title>
-      <link>bcmryan.github.io/bio/practical-experience/</link>
+      <link>/bio/practical-experience/</link>
       <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
-      <guid>bcmryan.github.io/bio/practical-experience/</guid>
+      <guid>/bio/practical-experience/</guid>
       <description>Language and Linguistics  Instructor at the university level: technology in linguistic research (summer semester 2018–summer semester 2019) Copy-editing: Copy-editor (2019–present) at Copernicus Publications, Research Assistant at the Collaborative Research Center 948 (2016–2017), freelance English copy-editor (2017–present) English as a Foreign Language: Instructor (2015–2017), Tutor (2013–2014) Research: German - Research Methods (2013–present), Dialectology (2015), Kiezdeutsch (2014); Menominee - Transcription (2015), Particle Analysis (2012); Japanese - Loanword Phonology (presented at WIGL 2015); Ukrainian - Field Methods (2015); Yoruba - Field Methods (2014)  In the fields of language and linguistics, I have been in the classroom as a student and teacher, in the lab as a research assistant and in the field as a research and educator.</description>
     </item>
     
     <item>
       <title>Education</title>
-      <link>bcmryan.github.io/bio/education/</link>
+      <link>/bio/education/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>bcmryan.github.io/bio/education/</guid>
+      <guid>/bio/education/</guid>
       <description>Menomonie High School I graduated from Menomonie High School in 2011 with the Presidential Education Award, the World Language Department Award and as a two-time Advanced Placement Scholar with Distinction. I was an active student, having had served on multiple boards at my high school and in my local community, competing numerous times in state-level Forensics competitions as well as local theater performances and working part-time as a Certified Nurse Aide.</description>
     </item>
     

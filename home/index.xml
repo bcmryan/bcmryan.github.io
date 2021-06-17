@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Brendan Ryan</title>
-    <link>bcmryan.github.io/home/</link>
+    <link>/home/</link>
     <description>Recent content in Home on Brendan Ryan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en_US</language>
-    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="bcmryan.github.io/home/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="/home/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Brendan Ryan</title>
-      <link>bcmryan.github.io/home/subheader/</link>
+      <link>/home/subheader/</link>
       <pubDate>Tue, 15 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>bcmryan.github.io/home/subheader/</guid>
+      <guid>/home/subheader/</guid>
       <description>Hi, I&amp;rsquo;m Brendan Ryan. I am currently an English-language copy editor at the open-access academic publishing house Copernicus Publications. In this position, I copy edit academic articles that span the natural sciences before they are released to accessed by anyone, anywhere, with no limitations, and free of charge.
 I completed my Master of Arts in European Linguistics (Europäische Sprachwissenschaft) at the University of Freiburg (Albert-Ludwigs-Universität Freiburg) in Freiburg im Breisgau, Germany in 2017.</description>
     </item>
