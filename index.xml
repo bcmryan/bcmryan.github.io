@@ -45,82 +45,81 @@ Conclusion</description>
     <item>
       <title>Introduction</title>
       <link>/repi/introduction/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/introduction/</guid>
-      <description>The Reproducible Raspberry Pi (RePi) server build project aims to walk you step by step through the stages of building a Raspberry Pi server that is stable, secure and, as the name suggests, reproducible. The specific setup that will be documented in this tutorial consists of a Raspberry Pi 4 connected to a hard drive array which will serve files directly to devices on the local network and interface with users via other means (specifically through a containerized media player).</description>
+      <description>The reproducible Raspberry Pi (RePi) server build project aims to walk you step by step through the stages of building a Raspberry Pi server that is stable, secure and, as the name suggests, reproducible. The specific setup that will be documented in this tutorial consists of a Raspberry Pi 4 connected to a hard drive array which will serve files directly to devices on the local network and interface with users via other means (specifically through a containerized media server).</description>
     </item>
     
     <item>
       <title>Hardware</title>
       <link>/repi/hardware/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/hardware/</guid>
-      <description>The hardware used in this project is based around the Raspberry Pi 4 single-board computer and other consumer grade parts. The hardware, just like the software in this build tutorial, was chosen because it is easy to find and easy to replace if needed. Nothing used here is artisan or botique or customed designed; it is there to be used, reused and desposed of as needed. But do not fret, the end product does not look that bad.</description>
+      <description>The hardware used in this project is based around the Raspberry Pi 4 single-board computer and other consumer grade parts. The hardware, just like the software in this build tutorial, was chosen because it is easy to find and easy to replace if needed. Nothing used here is artisan or boutique or custom-designed; it is there to be used, reused and disposed of as needed. But do not fret, the end product does not look that bad.</description>
     </item>
     
     <item>
       <title>Operating system</title>
       <link>/repi/operating-system/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/operating-system/</guid>
-      <description>The operating system is a computer&amp;rsquo;s main intersection point between hardware, software and firmware. In this build we will mainly be communicating with the Raspberry Pi server&amp;rsquo;s operating system through the use of a terminal emulator. We will for instance tell the operating system to download or install applications (or lower-level firmware or kernel updates), thus affecting the system&amp;rsquo;s software, and even shut down the server via a command, thus physically affecting the hardware&amp;rsquo;s state by use of a terminal emulator.</description>
+      <description>The operating system is a computer&amp;rsquo;s main intersection point between hardware, software and firmware. In this build you will mainly be communicating with the Raspberry Pi server&amp;rsquo;s operating system through the use of a terminal emulator. You will for instance tell the operating system to download or install applications (or lower-level firmware or kernel updates), thus affecting the system&amp;rsquo;s software, and even shut down the server via a command, thus physically affecting the hardware&amp;rsquo;s state by use of a terminal emulator.</description>
     </item>
     
     <item>
       <title>Network enumeration and authentication</title>
       <link>/repi/network-enumeration-and-authentication/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/network-enumeration-and-authentication/</guid>
-      <description>Network enumeration and authentication are all about knowing which device is which on a network and proving to a device that a user is who they say there are.
-SSH In order to issue commands to a server over the network from our local computer, we rely on the Secure Shell Protocol (SSH).
+      <description>Network enumeration and authentication are all about knowing which devices are which on a network and proving to a device that a user is who they say there are.
+SSH In order to issue commands to a server over the network from your local computer, you will be relying on the Secure Shell Protocol (SSH).
 As SSH is not enabled by default in Raspberry Pi OS, it must be activated before the first boot.</description>
     </item>
     
     <item>
       <title>Storage</title>
       <link>/repi/storage/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/storage/</guid>
-      <description>With the base of the system set up, the next component to add your Raspberry Pi server to get it off the ground as a file server is storage. As stated above, this tutorial follows the following setup: an array of hard drives (which do not need to be from the same manufacturer or of the same size; formatted in this example as ext4) inside an enclosure connected to the Raspberry Pi via USB 3.</description>
+      <description>With the base of the system set up, the next component to add to your Raspberry Pi to get it off the ground as a file server is storage. As stated above, this tutorial follows the following setup: an array of hard drives (which do not need to be from the same manufacturer or of the same size; formatted in this example as ext4) inside an enclosure connected to the Raspberry Pi via USB 3.</description>
     </item>
     
     <item>
       <title>File sharing with Samba</title>
       <link>/repi/file-sharing-with-samba/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/file-sharing-with-samba/</guid>
-      <description>With a central directory merging all of your large storage drives together, it is time to make them accessible over your local network with Samba, a reimplementation of the Server Message Block SMB protocol. Although SMB usually is targeted at use with Windows computers, as it allows for networking between Windows, Linux and macOS (all of which are represented in my house), it is what I use on my local network.</description>
+      <description>With a central directory merging all of your large storage drives together, it is time to make this single mount point accessible over your local network with Samba, a reimplementation of the Server Message Block (SMB) protocol. Although SMB usually is targeted at use with Windows computers, as it allows for networking between Windows, Linux and macOS (all of which are represented in my house), it is what I use on my local network.</description>
     </item>
     
     <item>
       <title>Containerization with Docker</title>
       <link>/repi/containerization-with-docker/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/containerization-with-docker/</guid>
-      <description>If you have been following along, you should now be able to access any directory or file via Samba on pretty much any computer or smart device connected through your local network. That is pretty neat. If that is enough for you and your needs, you can stop right here, but if you start exploring the world of containerization with Docker, continue along.
-In short, containerization allows you to run a computer system within a larger operating system.</description>
+      <description>At this point, you should now be able to access any directory or file via Samba on pretty much any computer or smart device connected through your local network. If that is enough for you and your needs (for instance, if /mnt/storage is populated with personal documents and family photos which are not in need of a media server), you can stop right here. The remainder of this section will be about exploring the world of containerization with Docker.</description>
     </item>
     
     <item>
       <title>Maintenance</title>
       <link>/repi/maintenance/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/maintenance/</guid>
-      <description>Once you have sucessfully set up and started using your new Raspberry Pi server, it is crucial that you keep your system up to date and keep your application data backed up. Luckily, with the skills you have acquired or reinforced through this tutorial, you should be absolutely fine doing so. Linux is an incredibly powerful base to the Rasbperry Pi OS explored in this tutorial, and its standard tools work very well for the maintaince of your system.</description>
+      <description>Once you have successfully set up and started using your Raspberry Pi as a full-fledged file and media server, it is crucial that you keep your system up to date and keep your application data backed up. Luckily, with the skills you have acquired or reinforced throughout this tutorial, you should be absolutely fine doing so. As you have seen throughout this tutorial, Linux is an incredibly powerful base to the Raspberry Pi OS, and its standard tools work very well for the maintenance of your system.</description>
     </item>
     
     <item>
       <title>Conclusion</title>
       <link>/repi/conclusion/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Jun 2021 00:00:00 +0200</pubDate>
       
       <guid>/repi/conclusion/</guid>
       <description>So there you have it. Welcome to your fully functional file and media server.

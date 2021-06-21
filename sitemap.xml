@@ -11,22 +11,31 @@
     <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/introduction/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/hardware/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/operating-system/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/network-enumeration-and-authentication/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/storage/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/file-sharing-with-samba/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/containerization-with-docker/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/maintenance/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/repi/conclusion/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
     <loc>/</loc>
     <lastmod>2021-06-15T00:00:00+00:00</lastmod>
@@ -40,9 +49,10 @@
     <loc>/bio/</loc>
     <lastmod>2021-06-15T00:00:00+02:00</lastmod>
   </url><url>
-    <loc>/categories/</loc>
-  </url><url>
     <loc>/repi/</loc>
+    <lastmod>2021-06-15T00:00:00+02:00</lastmod>
+  </url><url>
+    <loc>/categories/</loc>
   </url><url>
     <loc>/tags/</loc>
   </url>
